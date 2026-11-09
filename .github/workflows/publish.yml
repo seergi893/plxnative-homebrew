@@ -28,7 +28,7 @@ jobs:
           digest=hashlib.sha256(open(path,'rb').read()).hexdigest()
           appid='com.beb.plxnative.debug'
           url=f'https://github.com/{os.environ["GH_REPO"]}/releases/download/{tag}/{name}'
-          manifest={'id':appid,'version':tag.lstrip('v'),'type':'native','title':'PlxNative HUD PR #1295 (debug)','appDescription':'Experimental PlxNative build with estimated finish time in the player HUD','iconUri':'https://raw.githubusercontent.com/GLinnik21/plx-native/main/pkg/icon.png','sourceUrl':'https://github.com/GLinnik21/plx-native/pull/1295','rootRequired':False,'ipkUrl':url,'ipkHash':{'sha256':digest}}
+          manifest={'id':appid,'version':name.split('_')[1],'type':'native','title':'PlxNative HUD PR #1295 (debug)','appDescription':'Experimental PlxNative build with estimated finish time in the player HUD','iconUri':'https://raw.githubusercontent.com/GLinnik21/plx-native/main/assets/icon.png','sourceUrl':'https://github.com/GLinnik21/plx-native/pull/1295','rootRequired':False,'ipkUrl':url,'ipkHash':{'sha256':digest}}
           obj={'paging':{'page':1,'count':1,'maxPage':1,'itemsTotal':1},'packages':[{'id':appid,'title':manifest['title'],'iconUri':manifest['iconUri'],'manifest':manifest}]}
           with open('repo.json','w') as f:json.dump(obj,f,indent=2);f.write('\n')
           PY
