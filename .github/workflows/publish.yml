@@ -1,0 +1,43 @@
+name: Publish Homebrew catalog
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build catalog from latest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/plx-ipk
+          gh release download --pattern '*.ipk' --dir /tmp/plx-ipk
+          python3 - <<'PY'
+          import glob,hashlib,json,os,subprocess
+          files=glob.glob('/tmp/plx-ipk/*.ipk')
+          if len(files)!=1: raise SystemExit(f'Expected exactly one IPK, got {files}')
+          path=files[0]
+          name=os.path.basename(path)
+          tag=subprocess.check_output(['gh','release','view','--json','tagName','--jq','.tagName'],text=True).strip()
+          digest=hashlib.sha256(open(path,'rb').read()).hexdigest()
+          appid='com.beb.plxnative.debug'
+          url=f'https://github.com/{os.environ["GH_REPO"]}/releases/download/{tag}/{name}'
+          manifest={'id':appid,'version':tag.lstrip('v'),'type':'native','title':'PlxNative HUD PR #1295 (debug)','appDescription':'Experimental PlxNative build with estimated finish time in the player HUD','iconUri':'https://raw.githubusercontent.com/GLinnik21/plx-native/main/pkg/icon.png','sourceUrl':'https://github.com/GLinnik21/plx-native/pull/1295','rootRequired':False,'ipkUrl':url,'ipkHash':{'sha256':digest}}
+          obj={'paging':{'page':1,'count':1,'maxPage':1,'itemsTotal':1},'packages':[{'id':appid,'title':manifest['title'],'iconUri':manifest['iconUri'],'manifest':manifest}]}
+          with open('repo.json','w') as f:json.dump(obj,f,indent=2);f.write('\n')
+          PY
+      - name: Commit catalog
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add repo.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish Homebrew catalog for ${{ github.event.release.tag_name || 'latest release' }}"
+            git push
+          fi
