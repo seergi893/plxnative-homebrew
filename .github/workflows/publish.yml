@@ -1,5 +1,8 @@
 name: Publish Homebrew catalog
 on:
+  push:
+    paths:
+      - '.github/workflows/publish.yml'
   release:
     types: [published]
   workflow_dispatch:
