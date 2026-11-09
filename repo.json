@@ -1,9 +1,29 @@
 {
   "paging": {
     "page": 1,
-    "count": 0,
+    "count": 1,
     "maxPage": 1,
-    "itemsTotal": 0
+    "itemsTotal": 1
   },
-  "packages": []
+  "packages": [
+    {
+      "id": "com.beb.plxnative.debug",
+      "title": "PlxNative HUD PR #1295 (debug)",
+      "iconUri": "https://github.com/GLinnik21.png",
+      "manifest": {
+        "id": "com.beb.plxnative.debug",
+        "version": "0.9.0",
+        "type": "native",
+        "title": "PlxNative HUD PR #1295 (debug)",
+        "appDescription": "Experimental PlxNative build with estimated finish time in the player HUD",
+        "iconUri": "https://github.com/GLinnik21.png",
+        "sourceUrl": "https://github.com/GLinnik21/plx-native/pull/1295",
+        "rootRequired": false,
+        "ipkUrl": "https://github.com/seergi893/plxnative-homebrew/releases/download/v0.10.0-pr1295.1/com.beb.plxnative.debug_0.9.0_arm.ipk",
+        "ipkHash": {
+          "sha256": "77fd871f00b944bbeb52210192f212d9f0263ffa05fa84cee1d1f31fb66dafe7"
+        }
+      }
+    }
+  ]
 }
